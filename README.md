@@ -1,6 +1,6 @@
 # 📘 Pokémon Data Extraction & Pokédex Document Generator
 
-## 💡 Disclaimer 
+## ❗ Disclaimer 
 
 *This project is not affiliated with, endorsed by, or associated with Nintendo,
 Game Freak, or The Pokémon Company. All Pokémon names and related references
