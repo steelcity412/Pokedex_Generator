@@ -2,7 +2,7 @@
 
 ## 🧩 Overview
 
-This project is a **Pokédex data extraction and document generation tool** written in Python. It fetches detailed Pokémon data from the **PokéAPI**, processes and formats that data, downloads sprite images, and generates:
+This project is a **Pokédex data extraction and document generation tool** written in Python. It fetches detailed Pokémon data from the **[PokéAPI](https://pokeapi.co/)**, processes and formats that data, downloads sprite images, and generates:
 
 - **TXT summaries**
 - **DOCX Pokédex entries**
