@@ -1,5 +1,11 @@
 # # 📘 Pokémon Data Extraction & Pokédex Document Generator
 
+💡 *This project is not affiliated with, endorsed by, or associated with Nintendo,
+Game Freak, or The Pokémon Company. All Pokémon names and related references
+are trademarks of their respective owners. This project uses publicly available
+data from PokéAPI for educational and non-commercial purposes.*
+
+
 ## 🧩 Overview
 
 This project is a **Pokédex data extraction and document generation tool** written in Python. It fetches detailed Pokémon data from the **[PokéAPI](https://pokeapi.co/)**, processes and formats that data, downloads sprite images, and generates:
