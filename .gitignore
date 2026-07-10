@@ -1,0 +1,25 @@
+# Ignore the generated Pokémon output folder
+pokemon_output/
+
+# Ignore TXT output files
+*.txt
+
+# Ignore DOCX output files
+*.docx
+
+# Ignore PNG sprite images
+*.png
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+venv/
+.env/
+
+# Ignore macOS metadata
+.DS_Store
+
+# Ignore Windows metadata
+Thumbs.db
