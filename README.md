@@ -43,7 +43,6 @@ The output is clean, human‑readable, and structured like a modern Pokédex ent
 
 ```
 pip install aiohttp python-docx
-pip install python-docx
 ```
 
 ## ▶️ How to Run
