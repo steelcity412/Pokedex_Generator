@@ -36,32 +36,34 @@ The system is fully modular, allowing each output type (TXT, DOCX, ZIP) to be ge
 
 ## 📁 Modular File Structure
 
+```text
 project-root/
 │
-├── pokedex_generator.py # Main orchestrator
-├── logger_setup.py # Logging module
-├── folder_setup.py # Folder + backup creation
-├── txt_generator.py # TXT generation (multi-language)
-├── docx_generator.py # DOCX generation (multi-language)
-├── zip_generator.py # ZIP creation
+├── pokedex_generator.py        # Main orchestrator
+├── logger_setup.py             # Logging module
+├── folder_setup.py             # Folder + backup creation
+├── txt_generator.py            # TXT generation (multi-language)
+├── docx_generator.py           # DOCX generation (multi-language)
+├── zip_generator.py            # ZIP creation
 │
 └── pokemon_output/
-├── logs/
-├── backups/
-│ ├── Text_en/
-│ ├── Text_ja/
-│ ├── Text_ja-Hrkt/
-│ ├── Docx_en/
-│ ├── Docx_ja/
-│ └── Docx_ja-Hrkt/
-│
-├── Pokemon_Sprites/
-├── Pokemon_Text_en/
-├── Pokemon_Text_ja/
-├── Pokemon_Text_ja-Hrkt/
-├── Pokemon_Docx_en/
-├── Pokemon_Docx_ja/
-└── Pokemon_Docx_ja-Hrkt/
+    ├── logs/
+    ├── backups/
+    │   ├── Text_en/
+    │   ├── Text_ja/
+    │   ├── Text_ja-Hrkt/
+    │   ├── Docx_en/
+    │   ├── Docx_ja/
+    │   └── Docx_ja-Hrkt/
+    │
+    ├── Pokemon_Sprites/
+    ├── Pokemon_Text_en/
+    ├── Pokemon_Text_ja/
+    ├── Pokemon_Text_ja-Hrkt/
+    ├── Pokemon_Docx_en/
+    ├── Pokemon_Docx_ja/
+    └── Pokemon_Docx_ja-Hrkt/
+```
 
 ## 🚀 Installation Instructions
 
