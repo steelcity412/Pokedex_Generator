@@ -1,45 +1,77 @@
-# 📘 Pokémon Data Extraction & Pokédex Document Generator
+# 📘 Pokémon Data Extraction & Pokédex Generator
 
-## ❗ Disclaimer 
+## ❗ Disclaimer
 
-*This project is not affiliated with, endorsed by, or associated with Nintendo,
-Game Freak, or The Pokémon Company. All Pokémon names and related references
-are trademarks of their respective owners. This project uses publicly available
-data from PokéAPI for educational and non-commercial purposes.*
-
+_This project is not affiliated with, endorsed by, or associated with Nintendo, Game Freak, or The Pokémon Company. All Pokémon names and related references are trademarks of their respective owners. This project uses publicly available data from PokéAPI for educational and non‑commercial purposes._
 
 ## 🧩 Overview
 
-This project is a **Pokédex data extraction and document generation tool** written in Python. It fetches detailed Pokémon data from the **[PokéAPI](https://pokeapi.co/)**, processes and formats that data, downloads sprite images, and generates:
+This project is a modular Pokédex data extraction and document generation system written in Python. It fetches Pokémon data from the **[PokéAPI](https://pokeapi.co/)**, processes it, downloads sprite images, and generates:
 
-- **TXT summaries**
-- **DOCX Pokédex entries**
+- **TXT summaries (English, Japanese, Kana-only Japanese)**
+
+- **DOCX Pokédex entries (with embedded sprites)**
+
 - **PNG sprite images**
 
-for the **original 151 Pokémon**.
+- **ZIP archives of each output category**
 
-The output is clean, human‑readable, and structured like a modern Pokédex entry.
+The system is fully modular, allowing each output type (TXT, DOCX, ZIP) to be generated independently while sharing a single API data fetch.
 
 ## ✨ Features
 
-|Feature|Description|
-|---|---|
-|**Async API Fetching**|Fast parallel downloads using `aiohttp` + `asyncio`.|
-|**Height/Weight Conversion**|Converts PokéAPI units (dm/hg) into ft/in, meters, lbs, and kg.|
-|**Flavor Text Deduplication**|Removes duplicate English entries while preserving order.|
-|**Sprite Downloading**|Downloads both `front_default` and `official_artwork` images.|
-|**TXT + DOCX Generation**|Creates clean, readable Pokédex entries with embedded images.|
-|**File Guards**|Prevents overwriting existing TXT, DOCX, or PNG files.|
-|**Unified Species Section**|Egg groups, legendary status, baby status, mythical status, evolution chain.|
+| Feature                       | Description                                                                            |
+| :---------------------------- | :------------------------------------------------------------------------------------- |
+| **Modular Architecture**      | Separate Python modules for TXT, DOCX, logging, folder setup, and zipping.             |
+| **Single API Fetch**          | All Pokémon data is fetched once and passed to generators — no redundant API calls.    |
+| **Multi‑Language Output**     | Generates English (en), Japanese (ja), and Kana-only Japanese (ja-Hrkt) files.         |
+| **Backup System**             | Old TXT/DOCX files are moved to a backup folder before updates.                        |
+| **Validation Logic**          | TXT files are only updated if content changes; DOCX regenerates only when TXT changes. |
+| **Async API Fetching**        | Fast parallel downloads using aiohttp + asyncio.                                       |
+| **Height/Weight Conversion**  | Converts PokéAPI units (dm/hg) into ft/in, meters, lbs, and kg.                        |
+| **Flavor Text Deduplication** | Removes duplicate entries while preserving order.                                      |
+| **Sprite Downloading**        | Downloads both front_default and official_artwork images.                              |
+| **Logging (Console + File)**  | Full logging stored in pokemon_output/logs/pokedex.log.                                |
+| **ZIP Generation**            | Each output folder is zipped automatically at the end.                                 |
+
+## 📁 Modular File Structure
+
+project-root/
+│
+├── pokedex_generator.py # Main orchestrator
+├── logger_setup.py # Logging module
+├── folder_setup.py # Folder + backup creation
+├── txt_generator.py # TXT generation (multi-language)
+├── docx_generator.py # DOCX generation (multi-language)
+├── zip_generator.py # ZIP creation
+│
+└── pokemon_output/
+├── logs/
+├── backups/
+│ ├── Text_en/
+│ ├── Text_ja/
+│ ├── Text_ja-Hrkt/
+│ ├── Docx_en/
+│ ├── Docx_ja/
+│ └── Docx_ja-Hrkt/
+│
+├── Pokemon_Sprites/
+├── Pokemon_Text_en/
+├── Pokemon_Text_ja/
+├── Pokemon_Text_ja-Hrkt/
+├── Pokemon_Docx_en/
+├── Pokemon_Docx_ja/
+└── Pokemon_Docx_ja-Hrkt/
 
 ## 🚀 Installation Instructions
 
 ### **Prerequisites**
 
-- Python **3.10+**    
+- Python **3.10+**
+
 - Internet connection (PokéAPI is online-only)
 
-### **Install Dependencies**
+### Install Dependencies
 
 ```
 pip install aiohttp python-docx
@@ -47,19 +79,13 @@ pip install aiohttp python-docx
 
 ## ▶️ How to Run
 
-1. Save the script as:
-
-```
-pokedex_generator.py
-```
-
-2. Run it:
+1. Run the main orchestrator:
 
 ```
 python pokedex_generator.py
 ```
 
-3. After completion, check the folder:
+2. After completion, check:
 
 ```
 pokemon_output/
@@ -67,183 +93,73 @@ pokemon_output/
 
 You will find:
 
-- `001_Bulbasaur.txt`
-- `001_Bulbasaur.docx`
-- `001_Bulbasaur_front_default.png`
-- `001_Bulbasaur_artwork.png`
-- …and so on up to **151 Pokémon**.
-
-## 📁 Folder Structure
-
-```
-project-root/
-│
-├── pokedex_generator.py
-├── README.md
-│
-└── pokemon_output/
-    ├── 001_Bulbasaur.txt
-    ├── 001_Bulbasaur.docx
-    ├── 001_Bulbasaur_front_default.png
-    ├── 001_Bulbasaur_artwork.png
-    ├── ...
-    └── 151_Mew.docx
-```
-
-## 🛠️ Technologies Used
-
-|Technology|Purpose|
-|---|---|
-|**Python 3.10+**|Core language|
-|**aiohttp**|Asynchronous HTTP requests|
-|**asyncio**|Parallel execution|
-|**python-docx**|DOCX generation|
-|**PokéAPI**|Pokémon data source|
-|**Unicode-safe file writing**|Prevents encoding errors on Windows|
-
-## 🔍 Deep Dive — How the Script Works
-
-### **1. Fetch Pokémon list**
-
-The script requests:
-
-```
-https://pokeapi.co/api/v2/pokemon?limit=151
-```
-
-This returns URLs for each Pokémon’s detailed data.
-
-### **2. Fetch detailed Pokémon data (async)**
-
-Using `aiohttp` + `asyncio`, the script downloads:
-
-- Pokémon core data
-- Species data
-- Evolution chain data
-
-Async fetching makes the script **fast**, even with 151 Pokémon.
-
-### **3. Extract and dedupe flavor text**
-
-The script:
-
-- Filters for English entries
-- Removes duplicates flavor text entries
-- Preserves order
-- Cleans whitespace
-
-This produces a clean lore section.
-
-### **4. Convert height and weight**
-
-PokéAPI returns:
-
-- Height in **decimeters (dm)**
-- Weight in **hectograms (hg)**
-
-The script converts them into:
-
-- ft/in
-- meters
-- lbs
-- kg
-
-### **5. Build unified Species Information section**
-
-Includes:
-
-- Egg groups
-- Is Baby
-- Is Legendary
-- Is Mythical
-- Evolution chain
-
-### **6. Download sprite images**
-
-Two images are downloaded:
-
-- `front_default` (sprite image)
-- `official_artwork`
-
-Saved as PNG files.
-
-### **7. Generate TXT files**
-
-TXT files contain:
-
-- Core info
-- Abilities
-- Types
-- Stats
-- Species Information
-- Flavor text
-- Moves
-
-### **8. Generate DOCX files**
-
-DOCX files contain:
-
-- Left‑aligned images
-- Full summary text
-
-### **9. File guards**
-
-Prevents overwriting existing files.
+- `TXT files (en, ja, ja-Hrkt)`
+- `DOCX files (en, ja, ja-Hrkt)`
+- `PNG sprites`
+- `ZIP archives`
+- `Backup history`
+- `Logs`
 
 ## 📄 Example Output (TXT)
 
-```
-ID: 1
-Name: Bulbasaur
+ID: 0001
+Name (English): Bulbasaur
+Name (Japanese): フシギダネ
 Base Experience Yield: 64
 Height: 2'04" (0.7 m)
 Weight: 15.2 lbs (6.9 kg)
 Color: green
 
-Abilities:
- - overgrow
- - chlorophyll
+Abilities (English):
 
-Types:
- - grass
- - poison
+- overgrow
+- chlorophyll
+
+Types (English):
+
+- grass
+- poison
 
 Stats:
- - hp: 45
- - attack: 49
- - defense: 49
- - special-attack: 65
- - special-defense: 65
- - speed: 45
 
-Species Information:
- - Egg Groups: monster, plant
- - Is Baby: False
- - Is Legendary: False
- - Is Mythical: False
- - Evolution Chain: Bulbasaur → Ivysaur → Venusaur
+- hp: 45
+- attack: 49
+- defense: 49
+- special-attack: 65
+- special-defense: 65
+- speed: 45
 
-Flavor Text in the games (English):
- - A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.
- - It can go for days without eating a single morsel. In the bulb on its back, it stores energy.
- - The seed on its back is filled with nutrients. The seed grows steadily larger as its body grows.
- - It carries a seed on its back right from birth. As it grows older, the seed also grows larger.
- - While it is young, it uses the nutrients that are stored in the seeds on its back in order to grow.
- - BULBASAUR can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger.
- - There is a plant seed on its back right from the day this POKéMON is born. The seed slowly grows larger.
- - For some time after its birth, it grows by gaining nourishment from the seed on its back.
- - A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.
- - Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger.
- - There is a plant seed on its back right from the day this Pokémon is born. The seed slowly grows larger.
- - While it is young, it uses the nutrients that are stored in the seed on its back in order to grow.
+Species Information (English):
 
-Moves (full list):
- - tackle
- - vine-whip
- - razor-leaf
- - solar-beam
- ...
-```
+- Egg Groups: monster, plant
+- Is Baby: False
+- Is Legendary: False
+- Is Mythical: False
+- Evolution Chain: Bulbasaur → Ivysaur → Venusaur
+
+Flavor Text (Japanese):
+
+- うまれたときから　せなかに　しょくぶつの　タネが　うえてあって　すこしずつ　そだつ。
+- ひなたで　ひるねをする　すがたを　みかける。せなかの　タネが　たいようの　ひかりで　そだつのだ。
+
+Moves (English):
+
+- tackle
+- vine-whip
+- razor-leaf
+- solar-beam
+
+## 🛠️ Technologies Used
+
+| Technology                    | Purpose                             |
+| ----------------------------- | ----------------------------------- |
+| **Python 3.10+**              | Core language                       |
+| **aiohttp**                   | Asynchronous HTTP requests          |
+| **asyncio**                   | Parallel execution                  |
+| **python-docx**               | DOCX generation                     |
+| **PokéAPI**                   | Pokémon data source                 |
+| **Unicode-safe file writing** | Prevents encoding errors on Windows |
+| **logging**                   | Logs operations                     |
 
 ## 🤝 Contributing
 
@@ -269,55 +185,37 @@ Contributions are welcome!
 
 ## 🔮 Future Improvements
 
-### **Recommended enhancements**
-
-- Alphabetize moves
+- Add CLI flags (--limit, --lang, --no-docx)
+- Add PDF/HTML/JSON output
 - Add type icons in DOCX
-- Add bold section headers in DOCX
-- Add game names to flavor text
+- Add game-specific flavor text annotations
 - Combine all DOCX files into a single Pokédex book
 - Add retry logic for API downtime
-- Add CLI flags (e.g., `--limit 151`, `--no-docx`)
+- Add unit tests
 
-## 🔧 Refactoring Recommendations
+## 📝 CHANGELOG — v2.0 Modular Architecture Upgrade
 
-Your script is already clean, but here are improvements that would make it even more maintainable:
+Added
 
-### ✔ Break into modules
+- Full modularization into separate Python files.
+- Multi-language TXT generation (en, ja, ja-Hrkt).
+- Multi-language DOCX generation with embedded sprites.
+- Backup-before-overwrite system for TXT and DOCX.
+- TXT validation and DOCX regeneration logic.
+- Unified folder structure under pokemon_output/.
+- Logging system (console + rotating file).
+- ZIP generation for all output folders.
 
-Suggested structure:
+Changed
 
-```
-src/
-  fetch.py
-  parse.py
-  convert.py
-  write_txt.py
-  write_docx.py
-  main.py
-```
+- API is now fetched once and shared across modules.
 
-### ✔ Use dataclasses
+- TXT and DOCX generation moved out of the main script.
 
-Represent Pokémon as structured objects.
+- Folder creation moved to its own module.
 
-### ✔ Add logging
+Removed
 
-Replace `print()` with `logging`.
+- Monolithic single-file architecture.
 
-### ✔ Add configuration file
-
-Let users choose:
-
-- number of Pokémon
-- output formats
-- whether to download images
-- whether to dedupe flavor text
-
-### ✔ Add unit tests
-
-Especially for:
-
-- height conversion
-- weight conversion
-- dedupe logic
+- Redundant API calls.
